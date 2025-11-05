@@ -25,14 +25,14 @@ products_collection = db.collection('products')
 app = Flask(__name__)
 CORS(app) 
 
-# --- API Endpoints (100% en Firestore) ---
+# --- API Endpoints ---
 
 @app.route('/')
 def home():
     """Ruta de prueba para verificar que el servidor está vivo."""
     return jsonify({"message": "Bienvenido a la API del Bazar Universal (100% Firestore!)"})
 
-# 1. Endpoint: /api/items?q=:query (MODIFICADO)
+# 1. Endpoint: /api/items?q=:query 
 @app.route('/api/items', methods=['GET'])
 def get_items():
     """Busca productos en la coleccion 'products' de Firestore."""
@@ -56,7 +56,7 @@ def get_items():
         return jsonify({"error": str(e)}), 500
 
 
-# 2. Endpoint: /api/items/:id (MODIFICADO)
+# 2. Endpoint: /api/items/:id 
 @app.route('/api/items/<int:item_id>', methods=['GET'])
 def get_item_by_id(item_id):
     """Obtiene un producto especifico por su ID desde Firestore."""
@@ -81,14 +81,12 @@ def add_sale():
     if not data_to_save:
         return jsonify(False)
     try:
-        # Añade un nuevo documento (con ID automático) a la colección 'sales'
         sales_collection.add(data_to_save)
-        return jsonify(True) # Devuelve 'true' como se pide en el PDF
+        return jsonify(True)
     except Exception as e:
         print(f"Error al guardar en Firestore: {e}")
         return jsonify(False)
 
-# 4. Endpoint: /api/sales (Lee de 'sales')
 @app.route('/api/sales', methods=['GET'])
 def get_sales():
     """Obtiene todas las ventas registradas desde la coleccion 'sales'."""
